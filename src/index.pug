@@ -7,20 +7,18 @@ html(lang="en")
     title Document
     link(rel="stylesheet", href="assets/css/apps.css")
   body 
-    .container
-      input#hid(type="text" value="5")
-      select#sel
-        option(value="1") Раз 
-        option(value="2") Два 
-        option(value="3") Три 
-        option(value="4") Четыре 
-        option(value="5") Пять 
-      ul#list
-        li(data-option="1") Раз
-        li(data-option="2") Два
-        li(data-option="3") Три 
-        li(data-option="4") Четыре 
-        li(data-option="5") Пять
+    .site
+      #block.block(tabindex="0")
+        button#myButton.btn.btn-secondary Выберите значение
+        input#myInput.form-control(type="text" value="Введите текст")
+      //- #block2.block(tabindex="0")
+
+          
+
+    
+
+
+      
       
 
     

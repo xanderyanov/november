@@ -63,12 +63,12 @@ gulp.task("image", function () {
 
 var jsfiles = [
 	"node_modules/jquery/dist/jquery.min.js",
-	"node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js",
-	"node_modules/swiper/js/swiper.min.js",
-	"node_modules/jquery.maskedinput/src/jquery.maskedinput.js",
-	"node_modules/sweetalert/dist/sweetalert.min.js",
-	"node_modules/nouislider/distribute/nouislider.min.js",
-	// "node_modules/bootstrap/dist/js/bootstrap.min.js",
+	// "node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js",
+	// "node_modules/swiper/js/swiper.min.js",
+	// "node_modules/jquery.maskedinput/src/jquery.maskedinput.js",
+	// "node_modules/sweetalert/dist/sweetalert.min.js",
+	// "node_modules/nouislider/distribute/nouislider.min.js",
+	"node_modules/bootstrap/dist/js/bootstrap.bundle.js",
 ];
 
 gulp.task("js", function () {
