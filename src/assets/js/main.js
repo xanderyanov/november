@@ -1,61 +1,34 @@
 $(function () {
-	if ($(".summernote").length) {
-		$(".summernote").summernote({
-			placeholder: "Hello stand alone ui",
-			tabsize: 2,
-			prettifyHtml: true,
-			height: 120,
-			toolbar: [
-				["style", ["style"]],
-				["font", ["bold", "underline", "clear"]],
-				["color", ["color"]],
-				["para", ["ul", "ol", "paragraph"]],
-				["table", ["table"]],
-				["insert", ["link", "picture", "video"]],
-				["view", ["codeview", "help"]],
-			],
-		});
-		/* Auto format CodeView with indents */
-		// var $codeMirror;
-		// $summernote.on("summernote.codeview.toggled", event => {
-		// 	var editor = $codeMirror || $("textarea.note-codable").data("cmEditor");
-		// 	editor.execCommand("selectAll");
-		// 	editor.execCommand("indentAuto");
-		// 	editor.execCommand("goDocStart");
-		// });
+	var first = $("#hid").val();
+	console.log("заданное значение = " + first);
 
-		$(".saveTextCode").on("click", function () {
-			var markupStr = $(".summernote").summernote("code");
-			console.log(markupStr);
-		});
+	var select = $("#sel option");
+	var li = $("#list li");
+	for (i = 0; i < select.length; i++) {
+		if (select[i].value === first) {
+			select[i].selected = true;
+			$('li[data-option="' + first + '"]').addClass("activeLi");
+		}
 	}
-	if ($(".xIntro__area").length) {
-		$(".xIntro__more").on("click", function () {
-			if ($(this).hasClass("xIntro__more_active")) {
-				$(this).removeClass("xIntro__more_active").text("Подробнее...");
-				$(".xMore").removeClass("xMore_active").slideUp();
-				if ($window.width() <= 800) {
-					$(".brandIntro__right").slideUp();
-				}
-			} else {
-				$(this).addClass("xIntro__more_active").text("Скрыть");
-				$(".xMore").addClass("xMore_active").slideDown();
 
-				if ($window.width() <= 800) {
-					$(".brandIntro__right").slideDown();
-				}
-			}
-		});
-	}
-	$(".videoBox__playBtn").on("click", function () {
-		var $this = $(this);
-		$this.toggleClass("videoBox__playBtn_active");
-		$this.closest(".videoBox_i").find("video").trigger("play")[0].controls = true;
+	$("#sel").on("change", function () {
+		var t = $("#sel :selected").text(); // The text content of the selected option
+		var v = $("#sel :selected").val(); // The value of the selected option
+		console.log(t + " " + v);
+		$("#hid").val(v);
+		$("li").removeClass("activeLi");
+		$('li[data-option="' + v + '"]').addClass("activeLi");
 	});
-	$(".videoBox_i")
-		.children("video")
-		.on("play", function () {
-			var $this = $(this);
-			$this.closest(".eVideoGallery").find("video").not($this).trigger("pause");
-		});
+
+	li.on("click", function () {
+		var lidata = $(this).attr("data-option");
+		$("#hid").val(lidata);
+		$("li").removeClass("activeLi");
+		$(this).addClass("activeLi");
+		for (i = 0; i < select.length; i++) {
+			if (select[i].value === lidata) {
+				select[i].selected = true;
+			}
+		}
+	});
 });

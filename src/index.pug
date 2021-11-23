@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Document
+    link(rel="stylesheet", href="assets/css/apps.css")
+  body 
+    .container
+      input#hid(type="text" value="5")
+      select#sel
+        option(value="1") Раз 
+        option(value="2") Два 
+        option(value="3") Три 
+        option(value="4") Четыре 
+        option(value="5") Пять 
+      ul#list
+        li(data-option="1") Раз
+        li(data-option="2") Два
+        li(data-option="3") Три 
+        li(data-option="4") Четыре 
+        li(data-option="5") Пять
+      
+
+    
+
+
+  
+  script(src="assets/js/vendors.js")
+  script(src="assets/js/main.js") 

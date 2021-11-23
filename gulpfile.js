@@ -46,15 +46,6 @@ gulp.task("css", function () {
 		.pipe(gulp.dest("build/assets/css/"));
 });
 
-gulp.task("wysiwyg-css", function () {
-	return gulp
-		.src("src/assets/css/wysiwyg.css")
-		.pipe(sourcemaps.init())
-		.pipe(postcss([postcssImport()]))
-		.pipe(sourcemaps.write("."))
-		.pipe(gulp.dest("build/assets/css/"));
-});
-
 gulp.task("image", function () {
 	return gulp
 		.src("src/assets/img/**/*.*") //Выберем наши картинки
@@ -94,7 +85,7 @@ gulp.task("js", function () {
 	);
 });
 
-var myjsfiles = ["src/assets/js/main.js", "src/assets/js/__resize.js"];
+var myjsfiles = ["src/assets/js/main.js"];
 
 gulp.task("myJs", function () {
 	return (
