@@ -46,6 +46,15 @@ gulp.task("css", function () {
 		.pipe(gulp.dest("build/assets/css/"));
 });
 
+gulp.task("siscss", function () {
+	return gulp
+		.src("src/assets/css/sis.css")
+		.pipe(sourcemaps.init())
+		.pipe(postcss([postcssImport()]))
+		.pipe(sourcemaps.write("."))
+		.pipe(gulp.dest("build/assets/css/"));
+});
+
 gulp.task("image", function () {
 	return gulp
 		.src("src/assets/img/**/*.*") //Выберем наши картинки
@@ -86,7 +95,6 @@ gulp.task("js", function () {
 });
 
 var myjsfiles = ["src/assets/js/main.js"];
-
 gulp.task("myJs", function () {
 	return (
 		gulp
@@ -94,6 +102,20 @@ gulp.task("myJs", function () {
 			.pipe(plumber())
 			.pipe(sourcemaps.init()) //Инициализируем sourcemap
 			.pipe(concat("main.js")) // в какой файл объединить
+			// .pipe(uglify()) //Сожмем наш js
+			.pipe(sourcemaps.write("."))
+			.pipe(gulp.dest("build/assets/js"))
+	);
+});
+
+var sisjsfiles = ["src/assets/js/sis.js"];
+gulp.task("sisJs", function () {
+	return (
+		gulp
+			.src(sisjsfiles, { base: "assets/js" })
+			.pipe(plumber())
+			.pipe(sourcemaps.init()) //Инициализируем sourcemap
+			.pipe(concat("sis.js")) // в какой файл объединить
 			// .pipe(uglify()) //Сожмем наш js
 			.pipe(sourcemaps.write("."))
 			.pipe(gulp.dest("build/assets/js"))
@@ -118,12 +140,19 @@ gulp.task("clean", function () {
 
 gulp.task(
 	"build",
-	gulp.series("clean", gulp.parallel("css", "pug", "image", "js", "myJs", "fonts", "icomoon", "video"))
+	gulp.series(
+		"clean",
+		gulp.parallel("css", "siscss", "pug", "image", "js", "myJs", "sisJs", "fonts", "icomoon", "video")
+	)
 );
 
 gulp.task("watch", function () {
 	gulp.watch("src/assets/**/*.css*", gulp.series("css")).on("uplink", function (filepath) {
 		remember.forget("css", path.resolve(filepath));
+		delete cached.caches.styles[path.resolve(filepath)];
+	});
+	gulp.watch("src/assets/**/*.css*", gulp.series("siscss")).on("uplink", function (filepath) {
+		remember.forget("siscss", path.resolve(filepath));
 		delete cached.caches.styles[path.resolve(filepath)];
 	});
 	gulp.watch("src/assets/img/**/*.*", gulp.series("image")).on("uplink", function (filepath) {
@@ -132,6 +161,10 @@ gulp.task("watch", function () {
 	});
 	gulp.watch("src/assets/js/**/*.js*", gulp.series("myJs")).on("uplink", function (filepath) {
 		remember.forget("myJs", path.resolve(filepath));
+		delete cached.caches.myJs[path.resolve(filepath)];
+	});
+	gulp.watch("src/assets/js/**/*.js*", gulp.series("sisJs")).on("uplink", function (filepath) {
+		remember.forget("sisJs", path.resolve(filepath));
 		delete cached.caches.myJs[path.resolve(filepath)];
 	});
 	gulp.watch("src/**/*.pug", gulp.series("pug"));
