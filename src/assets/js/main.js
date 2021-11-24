@@ -409,7 +409,7 @@ function textInButton() {
 }
 
 var b = [];
-var c = [];
+// var c = [];
 // var i = 0; // i для turn
 
 $("#list").hide(); // скрываем список
@@ -434,12 +434,19 @@ $("#myInput").on("focus", function () {
 }); // очищаем input для новых значений при каждом клике
 
 function checking() {
-	$(".list").on("click", function () {
-		$("#myInput").val($(this).html());
-		turnUp();
-		textInButton();
-		focusOut();
-	});
+	$(".list")
+		.on("click", function () {
+			$("#myInput").val($(this).html());
+			turnUp();
+			textInButton();
+			focusOut();
+		})
+		.on("keyup", function (eventObject) {
+			if (eventObject.key == "Enter") {
+				console.log("ArrowDown");
+				$("#list").children(":first").focus().select();
+			}
+		});
 }
 checking();
 
@@ -451,11 +458,9 @@ function reset() {
 // сворачивание
 function turnUp() {
 	$("#list").slideUp(200);
-	// i = 0;
 }
 function turnDown() {
 	$("#list").slideDown(200);
-	// i = 1;
 }
 
 // поиск совпадений
@@ -463,52 +468,63 @@ function search() {
 	turnDown();
 	setTimeout(function () {
 		list();
-		// console.log("старое - " + oldValue);
 		var lwrSrch = $("#myInput").val().toLowerCase();
-		// console.log("новое - " + lwrSrch);
 		let match = $("#list").children();
-		// let isDelete = oldValue && lwrSrch.length < oldValue.length;
-		// if (isDelete) {
-		// 	console.log("удаление символа");
-		// }
 		if (match.length) {
 			match.each(function (i, d) {
 				d = $(d);
 				if (d.is('[data-id*="' + lwrSrch + '"]')) d.show();
 				else d.hide();
-				/*Формирование списка в выпадайке, подходящее под поиск*/
-				// c[i] =
-				// 	'<div class="list" data-id="' +
-				// 	$(this).attr("data-id") +
-				// 	'">' +
-				// 	$(this).attr("data-id").charAt(0).toUpperCase() +
-				// 	$(this).attr("data-id").substr(1) +
-				// 	"</div>";
-				// i++;
 			});
-
-			//$("#list").html(c);
-			// c = [];
 			checking();
-			// oldValue = lwrSrch;
 		}
-		// else {
-		// 	if ($("#myInput").val() != "") {
-		// 		$("#list").html("");
-		// 		checking();
-		// 	} else {
-		// 		reset();
-		// 		checking();
-		// 		console.log("reset");
-		// 	}
-		// }
-		// console.log("старое = новое = " + oldValue);
 	}, 50); // ожидание во избежание ошибок
+	// listSelect();
 }
 
 let oldValue = null;
-console.log("Начальное - " + oldValue);
-$("#myInput").on("input", search);
+
+$("#myInput")
+	.on("input", search)
+	.on("keyup", function (eventObject) {
+		if (eventObject.key == "ArrowDown") {
+			console.log("ArrowDown");
+			listSelect();
+		}
+	});
+
+function listSelect() {
+	var li = $(".list");
+	console.log(li);
+	var liSelected;
+	$(window).keydown(function (e) {
+		if (e.which === 40) {
+			if (liSelected) {
+				liSelected.removeClass("selected");
+				next = liSelected.next();
+				if (next.length > 0) {
+					liSelected = next.addClass("selected");
+				} else {
+					liSelected = li.eq(0).addClass("selected");
+				}
+			} else {
+				liSelected = li.eq(0).addClass("selected");
+			}
+		} else if (e.which === 38) {
+			if (liSelected) {
+				liSelected.removeClass("selected");
+				next = liSelected.prev();
+				if (next.length > 0) {
+					liSelected = next.addClass("selected");
+				} else {
+					liSelected = li.last().addClass("selected");
+				}
+			} else {
+				liSelected = li.last().addClass("selected");
+			}
+		}
+	});
+}
 // .on("keyup", function (eventObject) {
 // 	if (eventObject.key == "Shift" || eventObject.key == "Control") {
 // 		return false;

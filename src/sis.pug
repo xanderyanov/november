@@ -5,13 +5,17 @@ html(lang="en")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title Document
+    link(rel="stylesheet", href="assets/css/apps.css")
     link(rel="stylesheet", href="assets/css/sis.css")
-  body 
+    body
+      .site
+        #container.block(tabindex="0")
+          input.form-control(type="text")
+          button#myButton.btn.btn-secondary Выберите значение
+          input#search_field.form-control(type='text' onkeyup='createHelpList(event)' onmousedown='this.style.border = "1px solid #cccccc"' onclick='event.cancelBubble ? event.cancelBubble = true : event.stopPropagation();')
+          .list__outer
+            ul#select_list(onclick='selectHelp(event)')
 
-    .body
-      input(type='text' value='волосатые')
-      .array ▼
-    #list
 
   
   script(src="assets/js/vendors.js")
