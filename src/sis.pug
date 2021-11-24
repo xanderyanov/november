@@ -12,7 +12,7 @@ html(lang="en")
         #container.block(tabindex="0")
           input.form-control(type="text")
           button#myButton.btn.btn-secondary Выберите значение
-          input#search_field.form-control(type='text' onkeyup='createHelpList(event)' onmousedown='this.style.border = "1px solid #cccccc"' onclick='event.cancelBubble ? event.cancelBubble = true : event.stopPropagation();')
+          input#search_field.form-control(type='text' onkeyup='test1(event)' onmousedown='this.style.border = "1px solid #cccccc"' onclick='event.cancelBubble ? event.cancelBubble = true : event.stopPropagation();')
           .list__outer
             ul#select_list(onclick='selectHelp(event)')
 

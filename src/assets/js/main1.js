@@ -380,7 +380,7 @@ function list() {
 		// формируем список в div
 		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
 		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
-		b[i] = '<div class="list" tabindex="' + [i] + '" data-id="' + lwrList + '">' + uppList + "</div>";
+		b[i] = '<div class="list" tabindex="0" data-id="' + lwrList + '">' + uppList + "</div>";
 		/* data-id делает уникальным каждый блок при клике и будет использоваться в поиске совпадений */
 	});
 	$("#list").html(b); // помещаем весь массив в родительский div
@@ -446,22 +446,52 @@ function search() {
 let oldValue = null;
 
 $("#myInput")
-	.on("input", turnDown)
+	.on("input", search)
 	.on("keyup", function (eventObject) {
 		if (eventObject.key == "ArrowDown") {
 			console.log("ArrowDown");
 		}
 	});
 
-$("#myInput").on("keypress", function (e) {
-	if (e.key == 40) {
-		console.log("keypress");
-		// e.preventDefault();
-		var $next = $("[tabIndex=" + (+this.tabIndex + 1) + "]");
-		console.log($next.length);
-		if (!$next.length) {
-			$next = $("[tabIndex=1]");
-		}
-		$next.focus();
-	}
-});
+// function listSelect() {
+// 	var li = $(".list");
+// 	console.log(li);
+// 	var liSelected;
+// 	$(window).keydown(function (e) {
+// 		if (e.which === 40) {
+// 			if (liSelected) {
+// 				liSelected.removeClass("selected");
+// 				next = liSelected.next();
+// 				if (next.length > 0) {
+// 					liSelected = next.addClass("selected");
+// 				} else {
+// 					liSelected = li.eq(0).addClass("selected");
+// 				}
+// 			} else {
+// 				liSelected = li.eq(0).addClass("selected");
+// 			}
+// 		} else if (e.which === 38) {
+// 			if (liSelected) {
+// 				liSelected.removeClass("selected");
+// 				next = liSelected.prev();
+// 				if (next.length > 0) {
+// 					liSelected = next.addClass("selected");
+// 				} else {
+// 					liSelected = li.last().addClass("selected");
+// 				}
+// 			} else {
+// 				liSelected = li.last().addClass("selected");
+// 			}
+// 		}
+// 	});
+// }
+// .on("keyup", function (eventObject) {
+// 	if (eventObject.key == "Shift" || eventObject.key == "Control") {
+// 		return false;
+// 	} else if (eventObject.key == "Backspace") {
+// 		console.log("Backspace");
+// 		search();
+// 	} else {
+// 		search();
+// 	}
+// });

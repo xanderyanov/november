@@ -699,3 +699,16 @@ function selectHelp(ev) {
 	document.getElementById("search_field").value = target.getElementsByTagName("span")[0].innerHTML;
 	document.getElementById("select_list").style.display = "none";
 }
+
+// разбираю функцию createHelpList
+function test1(ev) {
+	var key = ev.keyCode || ev.charCode;
+	if (key == 13) {
+		console.log("enter");
+	}
+	// else if (key == 40 || (key == 38 && countItemsListHelp != 0)) {
+	if (key == 40) numActiveItem++;
+	if (key == 38) numActiveItem--;
+	console.log(numActiveItem);
+	// }
+}
