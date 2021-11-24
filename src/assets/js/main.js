@@ -411,16 +411,20 @@ function textInButton() {
 var b = [];
 var c = [];
 // var i = 0; // i для turn
+
 $("#list").hide(); // скрываем список
 
-$.each(a, function (i) {
-	// формируем список в div
-	var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
-	var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
-	b[i] = '<div class="list" tabindex="0" data-id="' + lwrList + '">' + uppList + "</div>";
-	/* data-id делает уникальным каждый блок при клике и будет использоваться в поиске совпадений */
-});
-$("#list").html(b); // помещаем весь массив в родительский div
+function list() {
+	$.each(a, function (i) {
+		// формируем список в div
+		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
+		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
+		b[i] = '<div class="list" tabindex="0" data-id="' + lwrList + '">' + uppList + "</div>";
+		/* data-id делает уникальным каждый блок при клике и будет использоваться в поиске совпадений */
+	});
+	$("#list").html(b); // помещаем весь массив в родительский div
+}
+list();
 
 $("#myInput").on("focus", function () {
 	$("#myInput").trigger("select");
@@ -458,42 +462,60 @@ function turnDown() {
 function search() {
 	turnDown();
 	setTimeout(function () {
+		list();
+		// console.log("старое - " + oldValue);
 		var lwrSrch = $("#myInput").val().toLowerCase();
-		console.log(lwrSrch);
-		if ($('[data-id*="' + lwrSrch + '"]')[0] != null) {
-			$('[data-id*="' + lwrSrch + '"]').each(function (i) {
+		// console.log("новое - " + lwrSrch);
+		let match = $("#list").children();
+		// let isDelete = oldValue && lwrSrch.length < oldValue.length;
+		// if (isDelete) {
+		// 	console.log("удаление символа");
+		// }
+		if (match.length) {
+			match.each(function (i, d) {
+				d = $(d);
+				if (d.is('[data-id*="' + lwrSrch + '"]')) d.show();
+				else d.hide();
 				/*Формирование списка в выпадайке, подходящее под поиск*/
-				c[i] =
-					'<div class="list" data-id="' +
-					$(this).attr("data-id") +
-					'">' +
-					$(this).attr("data-id").charAt(0).toUpperCase() +
-					$(this).attr("data-id").substr(1) +
-					"</div>";
-				i++;
+				// c[i] =
+				// 	'<div class="list" data-id="' +
+				// 	$(this).attr("data-id") +
+				// 	'">' +
+				// 	$(this).attr("data-id").charAt(0).toUpperCase() +
+				// 	$(this).attr("data-id").substr(1) +
+				// 	"</div>";
+				// i++;
 			});
-			console.log(c);
-			$("#list").html(c);
-			c = [];
-			console.log(c);
+
+			//$("#list").html(c);
+			// c = [];
 			checking();
-		} else {
-			if ($("#myInput").val() != "") {
-				$("#list").html("");
-				checking();
-			} else {
-				reset();
-				checking();
-			}
+			// oldValue = lwrSrch;
 		}
+		// else {
+		// 	if ($("#myInput").val() != "") {
+		// 		$("#list").html("");
+		// 		checking();
+		// 	} else {
+		// 		reset();
+		// 		checking();
+		// 		console.log("reset");
+		// 	}
+		// }
+		// console.log("старое = новое = " + oldValue);
 	}, 50); // ожидание во избежание ошибок
 }
 
-$("#myInput").on("keyup", function (eventObject) {
-	if (eventObject.key == "Shift" || eventObject.key == "Control") {
-		return false;
-	} else {
-		search();
-	}
-	// keypress не определяется смартфонами, потому keyup
-});
+let oldValue = null;
+console.log("Начальное - " + oldValue);
+$("#myInput").on("input", search);
+// .on("keyup", function (eventObject) {
+// 	if (eventObject.key == "Shift" || eventObject.key == "Control") {
+// 		return false;
+// 	} else if (eventObject.key == "Backspace") {
+// 		console.log("Backspace");
+// 		search();
+// 	} else {
+// 		search();
+// 	}
+// });
