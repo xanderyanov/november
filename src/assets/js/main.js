@@ -395,9 +395,7 @@ function list() {
 		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
 		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
 		b[i] =
-			'<div class="list" tabundex="' +
-			(i + tabindexVal + 1) +
-			'" data-title="' +
+			'<div class="list" data-title="' +
 			uppList +
 			'" data-id="' +
 			lwrList +
@@ -475,12 +473,14 @@ function listNavigate() {
 			if (liSelected) {
 				liSelected.removeClass("selected");
 				next = liSelected.next();
+				let listcont = $("#list");
 				if (next.length > 0) {
 					liSelected = next.addClass("selected");
-					let listcont = $("#list");
+
 					listcont.scrollTop(listcont.scrollTop() + next.position().top);
 				} else {
 					liSelected = li.eq(0).addClass("selected");
+					listcont.scrollTop(listcont.scrollTop() + liSelected.position().top);
 				}
 			} else {
 				liSelected = li.eq(0).addClass("selected");
@@ -489,12 +489,13 @@ function listNavigate() {
 			if (liSelected) {
 				liSelected.removeClass("selected");
 				next = liSelected.prev();
+				let listcont = $("#list");
 				if (next.length > 0) {
 					liSelected = next.addClass("selected");
-					let listcont = $("#list");
 					listcont.scrollTop(listcont.scrollTop() + next.position().top);
 				} else {
 					liSelected = li.last().addClass("selected");
+					listcont.scrollTop(listcont.scrollTop() + liSelected.position().top);
 				}
 			} else {
 				liSelected = li.last().addClass("selected");
