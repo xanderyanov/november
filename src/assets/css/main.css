@@ -58,3 +58,15 @@
 	box-shadow: 0 -1px rgba(0, 0, 0, 0.15) inset;
 	outline: none;
 }
+
+.list.active {
+	background: rgba(0, 0, 0, 0.05);
+	box-shadow: 0 -1px rgba(0, 0, 0, 0.15) inset;
+	outline: none;
+}
+
+.list.selected {
+	background: rgba(0, 0, 0, 0.05);
+	box-shadow: 0 -1px rgba(0, 0, 0, 0.15) inset;
+	outline: none;
+}

@@ -366,7 +366,7 @@ $("#myButton").on("focus", function () {
 });
 
 function focusOut() {
-	$("#block").removeClass("active");
+	// $("#block").removeClass("active");
 	$("#myButton").show();
 	$("#myInput").hide();
 }
@@ -374,6 +374,8 @@ function focusOut() {
 function focusIn() {
 	$("#myButton").hide();
 	$("#myInput").show().focus().select();
+	$("#list").slideDown(200);
+	listNavigate();
 }
 
 // function textInButton() {
@@ -384,13 +386,18 @@ function focusIn() {
 
 var b = [];
 function list() {
+	var tabindexVal = parseInt($("#myInput").attr("tabindex"));
+
 	$.each(a, function (i) {
 		// формируем список в div
+		// var tabindexItem =
 		var id = a[i].id;
 		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
 		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
 		b[i] =
-			'<div class="list" data-title="' +
+			'<div class="list" tabundex="' +
+			(i + tabindexVal + 1) +
+			'" data-title="' +
 			uppList +
 			'" data-id="' +
 			lwrList +
@@ -405,58 +412,102 @@ function list() {
 }
 list();
 
-function keyup() {
-	$(document).on("keyup", function (e) {
-		// console.dir(e);
-		if (e.target.id == "myInput" && e.key == "ArrowDown") {
-			var tabindexVal = e.target.tabIndex;
-			$("#list").slideDown(200);
+// function keyup() {
+// 	$(document).on("keyup", function (e) {
+// 		// console.dir(e);
+// 		if (e.target.id == "myInput" && e.key == "ArrowDown") {
+// 			$("#list").slideDown(200).addClass("active");
+// 			var $next = $(".list:visible").first();
+// 			// $next.focus();
+// 			$next.addClass("selected");
+// 			// return;
+// 		}
+// 		// if (e.key == "ArrowDown") {
+// 		// 	e.preventDefault();
+// 		// 	if ($("#list").hasClass("active")) {
+// 		// 		var $next = $(".list:visible").first();
+// 		// 		if ($next) {
+// 		// 			$next.removeClass("active");
+// 		// 			$next = $next.next();
+// 		// 			$next.addClass("active");
+// 		// 		} else {
+// 		// 			$(".list:visible").first().addClass("active");
+// 		// 		}
+// 		// 	}
+// 		// 	// return;
+// 		// }
 
-			$(".list").each(function (i) {
-				$(this).attr("tabindex", i + tabindexVal + 1);
-			});
-			var $next = $(".list:first-child");
-			$next.focus();
-		}
-		if (e.target.id == "myInput" && e.key == "Char") {
-			console.log("321321321");
-		}
-		if (e.target.className == "list" && e.key == "ArrowDown") {
-			e.preventDefault();
-			var next = e.target.nextSibling;
-			if (next) {
-				next.focus();
+// 		if (e.target.className == "list" && e.key == "ArrowUp") {
+// 			e.preventDefault();
+// 			var next = e.target.previousSibling;
+// 			if (next) {
+// 				next.addClass("active");
+// 			} else {
+// 				$("#list").slideUp(200);
+// 				$("#myInput").focus();
+// 			}
+// 			// return;
+// 		}
+
+// 		if ((e.target.className == "list" || e.target.id == "myInput") && e.key == "Enter") {
+// 			var val = e.target.dataset.title;
+// 			if (val) {
+// 				$("#myInput").val(val).hide();
+// 			} else {
+// 				val = $("#myInput").val();
+// 			}
+// 			console.log(val);
+// 			$("#list").slideUp(200);
+// 			$("#myInput").val(val).hide();
+// 			$("#myButton").html(val).show();
+// 			// return;
+// 		}
+// 	});
+// }
+// keyup();
+
+function listNavigate() {
+	var li = $(".list").filter(":visible");
+	console.log(li);
+	var liSelected;
+	$(document).on("keyup", function (e) {
+		if (e.key == "ArrowDown") {
+			if (liSelected) {
+				liSelected.removeClass("selected");
+				next = liSelected.next();
+				if (next.length > 0) {
+					liSelected = next.addClass("selected");
+					let listcont = $("#list");
+					listcont.scrollTop(listcont.scrollTop() + next.position().top);
+				} else {
+					liSelected = li.eq(0).addClass("selected");
+				}
 			} else {
-				$(".list:first-child").focus();
+				liSelected = li.eq(0).addClass("selected");
 			}
-		} else if (e.target.className == "list" && e.key == "ArrowUp") {
-			e.preventDefault();
-			var next = e.target.previousSibling;
-			if (next) {
-				next.focus();
+		} else if (e.key == "ArrowUp") {
+			if (liSelected) {
+				liSelected.removeClass("selected");
+				next = liSelected.prev();
+				if (next.length > 0) {
+					liSelected = next.addClass("selected");
+					let listcont = $("#list");
+					listcont.scrollTop(listcont.scrollTop() + next.position().top);
+				} else {
+					liSelected = li.last().addClass("selected");
+				}
 			} else {
-				$("#list").slideUp(200);
-				$("#myInput").focus();
+				liSelected = li.last().addClass("selected");
 			}
-		}
-		if ((e.target.className == "list" || e.target.id == "myInput") && e.key == "Enter") {
-			var val = e.target.dataset.title;
-			if (val) {
-				$("#myInput").val(val).hide();
-			} else {
-				val = $("#myInput").val();
-			}
-			console.log(val);
-			$("#list").slideUp(200);
-			$("#myInput").val(val).hide();
-			$("#myButton").html(val).show();
 		}
 	});
 }
 
-keyup();
-
-$("#myInput").on("input", search);
+$("#myInput").on("input", function () {
+	search();
+	//keyup();
+	// listNavigate();
+});
 
 function search() {
 	$("#list").slideDown(200);
@@ -464,11 +515,18 @@ function search() {
 		var lwrSrch = $("#myInput").val().toLowerCase();
 		let match = $("#list").children();
 
+		var tabindexVal2 = parseInt($("#myInput").attr("tabindex"));
+		console.log(tabindexVal2);
+
+		// $(".list").each(function (i) {
+		// 	$(this).attr("tabindex", i + tabindexVal + 1);
+		// });
+
 		if (match.length) {
 			match.each(function (i, d) {
 				d = $(d);
 				if (d.is('[data-id*="' + lwrSrch + '"]')) d.show();
-				else d.hide();
+				else d.hide(); /*.attr("tabindex", "0")*/
 			});
 			checking();
 		}
