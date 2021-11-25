@@ -1,3 +1,5 @@
+$(function () {});
+
 var a = [
 	{
 		id: 1,
@@ -341,29 +343,14 @@ var a = [
 	},
 ];
 
-$(function () {});
-
-// $("input").on("keypress", function (e) {
-// 	if (e.which == ArrowDown) {
-// 		e.preventDefault();
-// 		console.log("Нажатие вниз");
-// 		// var $next = $("[tabIndex=" + (+this.tabIndex + 1) + "]");
-// 		// console.log($next.length);
-// 		// if (!$next.length) {
-// 		// 	$next = $("[tabIndex=1]");
-// 		// }
-// 		// $next.focus();
-// 	}
-// });
-
 $("#myButton").on("click", function () {
-	// $("#block").addClass("active");
+	$("#block").addClass("active");
 	focusIn();
 });
-$("#myButton").on("focus", function () {
-	// $("#block").addClass("active");
-	focusIn();
-});
+// $("#myButton").on("focus", function () {
+// 	$("#block").addClass("active");
+// 	focusIn();
+// });
 
 function focusOut() {
 	$("#block").removeClass("active");
@@ -376,116 +363,42 @@ function focusIn() {
 	$("#myInput").show().focus().select();
 }
 
-// function textInButton() {
-// 	var t = $("#myInput").val();
-// 	$("#myButton").text(t);
-// 	if (t == "") $("#myButton").text("Введите значние");
-// }
-
-var b = [];
-function list() {
-	$.each(a, function (i) {
-		// формируем список в div
-		var id = a[i].id;
-		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
-		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
-		b[i] =
-			'<div class="list" data-title="' +
-			uppList +
-			'" data-id="' +
-			lwrList +
-			'"><span>' +
-			id +
-			" </span><span>" +
-			uppList +
-			"</span></div>";
-		/* data-id делает уникальным каждый блок при клике и будет использоваться в поиске совпадений */
-	});
-	$("#list").html(b); // помещаем весь массив в родительский div
-}
-list();
-
-function keyup() {
-	$(document).on("keyup", function (e) {
-		// console.dir(e);
-		if (e.target.id == "myInput" && e.key == "ArrowDown") {
-			var tabindexVal = e.target.tabIndex;
-			$("#list").slideDown(200);
-
-			$(".list").each(function (i) {
-				$(this).attr("tabindex", i + tabindexVal + 1);
-			});
-			var $next = $(".list:first-child");
-			$next.focus();
-		}
-		if (e.target.id == "myInput" && e.key == "Char") {
-			console.log("321321321");
-		}
-		if (e.target.className == "list" && e.key == "ArrowDown") {
-			e.preventDefault();
-			var next = e.target.nextSibling;
-			if (next) {
-				next.focus();
-			} else {
-				$(".list:first-child").focus();
-			}
-		} else if (e.target.className == "list" && e.key == "ArrowUp") {
-			e.preventDefault();
-			var next = e.target.previousSibling;
-			if (next) {
-				next.focus();
-			} else {
-				$("#list").slideUp(200);
-				$("#myInput").focus();
-			}
-		}
-		if ((e.target.className == "list" || e.target.id == "myInput") && e.key == "Enter") {
-			var val = e.target.dataset.title;
-			if (val) {
-				$("#myInput").val(val).hide();
-			} else {
-				val = $("#myInput").val();
-			}
-			console.log(val);
-			$("#list").slideUp(200);
-			$("#myInput").val(val).hide();
-			$("#myButton").html(val).show();
-		}
-	});
-}
-
-keyup();
-
-$("#myInput").on("input", search);
-
-function search() {
-	$("#list").slideDown(200);
-	setTimeout(function () {
-		var lwrSrch = $("#myInput").val().toLowerCase();
-		let match = $("#list").children();
-
-		if (match.length) {
-			match.each(function (i, d) {
-				d = $(d);
-				if (d.is('[data-id*="' + lwrSrch + '"]')) d.show();
-				else d.hide();
-			});
-			checking();
-		}
-	}, 50);
-}
-
 function textInButton() {
 	var t = $("#myInput").val();
 	$("#myButton").text(t);
 	if (t == "") $("#myButton").text("Введите значние");
 }
 
+var b = [];
+// var c = [];
+// var i = 0; // i для turn
+
+$("#list").hide(); // скрываем список
+
+function list() {
+	$.each(a, function (i) {
+		// формируем список в div
+		var lwrList = a[i].cityName.toLowerCase(); // массив в нижний регистр - для поиска
+		var uppList = lwrList.charAt(0).toUpperCase() + lwrList.substr(1); //Названия делаем с большой буквы
+		b[i] = '<div class="list" tabindex="' + [i] + '" data-id="' + lwrList + '">' + uppList + "</div>";
+		/* data-id делает уникальным каждый блок при клике и будет использоваться в поиске совпадений */
+	});
+	$("#list").html(b); // помещаем весь массив в родительский div
+}
+list();
+
+$("#myInput").on("focus", function () {
+	$("#myInput").trigger("select");
+	// reset();
+	checking();
+	turnDown();
+}); // очищаем input для новых значений при каждом клике
+
 function checking() {
 	$(".list")
 		.on("click", function () {
-			$("#myInput").val($(this).data("title"));
-			$("#list").slideUp(200);
+			$("#myInput").val($(this).html());
+			turnUp();
 			textInButton();
 			focusOut();
 		})
@@ -498,11 +411,57 @@ function checking() {
 }
 checking();
 
-function contentDisp() {
-	$.ajax({
-		url: "file.csv",
-		success: function (data) {
-			$("#contentArea").html(data);
-		},
-	});
+function reset() {
+	$("#myInput").val("");
+	$("#list").html(b);
 }
+
+// сворачивание
+function turnUp() {
+	$("#list").slideUp(200);
+}
+function turnDown() {
+	$("#list").slideDown(200);
+}
+
+// поиск совпадений
+function search() {
+	turnDown();
+	setTimeout(function () {
+		list();
+		var lwrSrch = $("#myInput").val().toLowerCase();
+		let match = $("#list").children();
+		if (match.length) {
+			match.each(function (i, d) {
+				d = $(d);
+				if (d.is('[data-id*="' + lwrSrch + '"]')) d.show();
+				else d.hide();
+			});
+			checking();
+		}
+	}, 50); // ожидание во избежание ошибок
+	// listSelect();
+}
+
+let oldValue = null;
+
+$("#myInput")
+	.on("input", turnDown)
+	.on("keyup", function (eventObject) {
+		if (eventObject.key == "ArrowDown") {
+			console.log("ArrowDown");
+		}
+	});
+
+$("#myInput").on("keypress", function (e) {
+	if (e.key == 40) {
+		console.log("keypress");
+		// e.preventDefault();
+		var $next = $("[tabIndex=" + (+this.tabIndex + 1) + "]");
+		console.log($next.length);
+		if (!$next.length) {
+			$next = $("[tabIndex=1]");
+		}
+		$next.focus();
+	}
+});
