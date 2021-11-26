@@ -365,7 +365,7 @@ function focusIn() {
 		$("#myButton").hide();
 		$("#myInput").show().focus().select();
 		$("#list").slideDown(200).scrollTop("0");
-		listNavigate();
+		// listNavigate();
 	}, 100);
 }
 
@@ -391,75 +391,79 @@ function list() {
 }
 list();
 
-//навигация по списку стрелками и присвоение значения по клику Enter
-function listNavigate() {
-	console.log("Включили навигацию");
-	var li = $(".list");
-	var liSelected;
-	$("#myInput").on("keyup", function (e) {
-		let listcont = $("#list");
-		let allVisible = $("#list").children(".list:visible");
-		let currentIndex = allVisible.index(liSelected);
-		if (e.key == "ArrowDown") {
-			if (liSelected) {
-				// let allVisible = $("#list").children(".list:visible");
-				// let currentIndex = allVisible.index(liSelected);
-
-				liSelected.removeClass("selected");
-				next = allVisible.eq(currentIndex + 1);
-				if (currentIndex >= allVisible.length - 1) {
-					console.log("возвращаемся снизу наверх");
-					liSelected = li.eq(0).addClass("selected");
-					listcont.scrollTop(listcont.scrollTop() + liSelected.position().top);
-					return;
-				}
-				if (next.length > 0) {
-					liSelected = next.addClass("selected");
-					listcont.scrollTop(listcont.scrollTop() + next.position().top);
-					console.log("идем вниз");
-				}
-			} else {
-				liSelected = li.eq(0).addClass("selected");
-				console.log("первый раз вниз");
-			}
-			$("#myInput").val(liSelected.data("title"));
-		} else if (e.key == "ArrowUp") {
-			if (liSelected) {
-				// let allVisible = $("#list").children(".list:visible");
-				// let currentIndex = allVisible.index(liSelected);
-				liSelected.removeClass("selected");
-				prev = allVisible.eq(currentIndex - 1);
-				if (currentIndex <= 0) {
-					console.log("возвращаемся сверху вниз");
-					liSelected = li.eq(currentIndex).removeClass("selected");
-					liSelected = li.last().addClass("selected");
-					listcont.scrollTop(listcont.scrollTop() + liSelected.position().top);
-					return;
-				}
-				if (prev.length > 0) {
-					liSelected = prev.addClass("selected");
-					listcont.scrollTop(listcont.scrollTop() + prev.position().top);
-					console.log("идем вверх");
-				}
-			} else {
-				liSelected = li.last().addClass("selected");
-				listcont.scrollTop(listcont.scrollTop() + liSelected.position().top);
-				console.log("первый раз стрелкой вверх попадаем в конец списка");
-			}
-			$("#myInput").val(liSelected.data("title"));
-		}
-
-		if (e.key == "Enter") {
-			console.log("Enter");
-			if (liSelected) {
-				newCheck(liSelected);
-				liSelected.removeClass("selected");
-				liSelected = null;
-				$("#list").scrollTop("0");
-			}
-		}
-	});
+function ensureItemVisble(container, item) {
+	let ch = container.height();
+	let ct = container.scrollTop();
+	let ih = item.height();
+	let it = item.position().top;
+	if (ch <= ih || it < 0) {
+		container.scrollTop(ct + it);
+	} else if (it + ih > ch) {
+		container.scrollTop(ct + it + ih - ch);
+	}
 }
+
+console.log("Включили навигацию");
+$("#myInput").on("keydown", listKeydown);
+
+function listKeydown(e) {
+	let listContainer = $("#list");
+	let allVisible = listContainer.children(".list:visible");
+	let selectedItem = allVisible.filter(".selected");
+	let currentIndex = allVisible.index(selectedItem);
+
+	if (e.key === "ArrowDown") {
+		if (selectedItem.length > 0) {
+			if (currentIndex >= allVisible.length - 1) currentIndex = -1;
+			selectedItem.removeClass("selected");
+			selectedItem = allVisible.eq(currentIndex + 1);
+		} else {
+			selectedItem = allVisible.eq(0);
+			console.log("первый раз вниз");
+		}
+		selectedItem.addClass("selected");
+		ensureItemVisble(listContainer, selectedItem);
+		$("#myInput").val(selectedItem.data("title"));
+		return;
+	}
+
+	if (e.key === "ArrowUp") {
+		if (selectedItem.length > 0) {
+			if (currentIndex <= 0) currentIndex = allVisible.length;
+			selectedItem.removeClass("selected");
+			selectedItem = allVisible.eq(currentIndex - 1);
+		} else {
+			selectedItem = allVisible.eq(allVisible.length - 1);
+			console.log("первый раз вверх");
+		}
+		selectedItem.addClass("selected");
+		ensureItemVisble(listContainer, selectedItem);
+		$("#myInput").val(selectedItem.data("title"));
+		return;
+	}
+
+	if (e.key === "Enter") {
+		e.preventDefault();
+		console.log("Enter");
+		if (selectedItem.length) {
+			newCheck(selectedItem);
+			selectedItem.removeClass("selected");
+			listContainer.scrollTop(0);
+		}
+		return;
+	}
+
+	if (e.key === "Esc") {
+		console.log("Esc");
+		if (selectedItem.length) {
+			//newCheck(selectedItem);
+			// здесь надо скрыть выпадайку, не меняя значение.
+			selectedItem.removeClass("selected");
+			listContainer.scrollTop(0);
+		}
+	}
+}
+
 //работает этот
 function newCheck(event) {
 	$("#myInput").val($(event).data("title"));
