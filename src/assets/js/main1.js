@@ -347,10 +347,10 @@ $("#myButton").on("click", function () {
 	$("#block").addClass("active");
 	focusIn();
 });
-// $("#myButton").on("focus", function () {
-// 	$("#block").addClass("active");
-// 	focusIn();
-// });
+$("#myButton").on("focus", function () {
+	$("#block").addClass("active");
+	focusIn();
+});
 
 function focusOut() {
 	$("#block").removeClass("active");

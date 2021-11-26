@@ -9,11 +9,14 @@ html(lang="en")
   body 
     .site
       #block.block
-        button#myButton.btn.btn-secondary.mb-3(tabindex="1") Выберите значение
-        input#myInput.form-control(type="text" value="Введите текст" tabindex="2")
+        button#myButton.btn.btn-secondary(tabindex="1") Выберите значение
+        input#myInput.form-control(type="text" placeholder="Введите текст" value="" tabindex="2")
         .list__outer
           #list
-        input
+        //- input
+      #block.block
+        button.btn.btn-secondary(tabindex="1") Кнопка
+        
 
   
   script(src="assets/js/vendors.js")
