@@ -393,6 +393,7 @@ list();
 
 //навигация по списку стрелками и присвоение значения по клику Enter
 function listNavigate() {
+	console.log("Включили навигацию");
 	var li = $(".list");
 	var liSelected;
 	$("#myInput").on("keyup", function (e) {
@@ -467,15 +468,39 @@ function newCheck(event) {
 	$("#myButton").text($(event).data("title"));
 }
 
-//клик по элементу списка с присвоением значения инпуту
-checking();
-function checking() {
-	$(".list").on("click", function () {
-		$("#myInput").val($(this).data("title"));
-		textInButton();
-		focusOut();
-	});
-}
+$(".list").on("click", function () {
+	$("#myInput").val($(this).data("title"));
+	$("#list").slideUp(200);
+	focusOut();
+	$("#myButton").text($(this).data("title"));
+});
+
+// function checking() {
+// 	$(".list")
+// 		.on("click", function () {
+// 			$("#myInput").val($(this).data("title"));
+// 			$("#list").slideUp(200);
+// 			textInButton();
+// 			focusOut();
+// 		})
+// 		.on("keyup", function (eventObject) {
+// 			if (eventObject.key == "Enter") {
+// 				console.log("ArrowDown");
+// 				$("#list").children(":first").focus().select();
+// 			}
+// 		});
+// }
+// checking();
+
+// //клик по элементу списка с присвоением значения инпуту
+// checking();
+// function checking() {
+// 	$(".list").on("click", function () {
+// 		$("#myInput").val($(this).data("title"));
+// 		textInButton();
+// 		focusOut();
+// 	});
+// }
 
 //поиск в инпуте
 $("#myInput").on("input", function () {
