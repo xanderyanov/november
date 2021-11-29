@@ -479,33 +479,6 @@ $(".list").on("click", function () {
 	$("#myButton").text($(this).data("title"));
 });
 
-// function checking() {
-// 	$(".list")
-// 		.on("click", function () {
-// 			$("#myInput").val($(this).data("title"));
-// 			$("#list").slideUp(200);
-// 			textInButton();
-// 			focusOut();
-// 		})
-// 		.on("keyup", function (eventObject) {
-// 			if (eventObject.key == "Enter") {
-// 				console.log("ArrowDown");
-// 				$("#list").children(":first").focus().select();
-// 			}
-// 		});
-// }
-// checking();
-
-// //клик по элементу списка с присвоением значения инпуту
-// checking();
-// function checking() {
-// 	$(".list").on("click", function () {
-// 		$("#myInput").val($(this).data("title"));
-// 		textInButton();
-// 		focusOut();
-// 	});
-// }
-
 //поиск в инпуте
 $("#myInput").on("input", function () {
 	search();
@@ -531,12 +504,3 @@ function textInButton() {
 	$("#myButton").text(t);
 	if (t == "") $("#myButton").text("Введите значние");
 }
-
-// function contentDisp() {
-// 	$.ajax({
-// 		url: "file.csv",
-// 		success: function (data) {
-// 			$("#contentArea").html(data);
-// 		},
-// 	});
-// }
